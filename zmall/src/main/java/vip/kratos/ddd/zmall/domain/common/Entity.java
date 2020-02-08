@@ -1,5 +1,7 @@
 package vip.kratos.ddd.zmall.domain.common;
 
+import com.google.common.base.Objects;
+
 public abstract class Entity {
     protected Long id;
 
@@ -7,27 +9,21 @@ public abstract class Entity {
         return id;
     }
 
-    protected Entity(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (obj == null) return false;
-        if (this.getClass() != obj.getClass()) return false;
+        if (obj == null || this.getClass() != obj.getClass()) return false;
 
         Entity other = (Entity) obj;
-        if (this.id == null || other.getId() == null) return false;
-        return id.equals(other.getId());
+        return (this.id != null && other.getId() != null) && id.equals(other.getId());
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        return result;
+        return Objects.hashCode(id);
     }
 }

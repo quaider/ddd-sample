@@ -1,20 +1,29 @@
 package vip.kratos.ddd.zmall.domain.cart.entity;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
-import vip.kratos.ddd.zmall.domain.cart.entity.valueobject.ProductSnapshot;
 import vip.kratos.ddd.zmall.domain.common.Entity;
+import vip.kratos.ddd.zmall.domain.common.vo.ProductSnapshot;
+
+import java.util.Date;
 
 @Getter
-@Setter(AccessLevel.PACKAGE)
 public class CartItem extends Entity {
     private int quantity;
     private ProductSnapshot product;
+    private Date addTime;
 
-    public CartItem(long id, int quantity, ProductSnapshot product) {
-        super(id);
+    public CartItem(int quantity, ProductSnapshot product) {
         this.quantity = quantity;
         this.product = product;
+        this.addTime = new Date();
+    }
+
+    public void increaseQuantity(int quantity) {
+        this.quantity += quantity;
+    }
+
+    public void decreaseQuantity(int quantity) {
+        this.quantity -= quantity;
+        if (this.quantity < 1) this.quantity = 1;
     }
 }
