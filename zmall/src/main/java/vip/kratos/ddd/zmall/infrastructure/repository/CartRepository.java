@@ -2,6 +2,7 @@ package vip.kratos.ddd.zmall.infrastructure.repository;
 
 import org.springframework.stereotype.Repository;
 import vip.kratos.ddd.zmall.domain.cart.entity.Cart;
+import vip.kratos.ddd.zmall.domain.cart.entity.CartItem;
 import vip.kratos.ddd.zmall.domain.cart.repository.ICartRepository;
 import vip.kratos.ddd.zmall.infrastructure.factory.CartFactory;
 import vip.kratos.ddd.zmall.infrastructure.po.CartItemPO;
@@ -27,17 +28,22 @@ public class CartRepository implements ICartRepository {
     }
 
     @Override
-    public Cart findCart(long userId) {
+    public Cart findCart(long userId, boolean load) {
         CartPO cartPO = cartDao.findByUserId(userId);
 
-        if (cartPO == null) {
-            cartPO = CartPO.builder().userId(userId).build();
-            return cartFactory.toCart(cartPO, new ArrayList<>());
+        if (cartPO == null) return null;
+
+        List<CartItemPO> cartItemPOList = new ArrayList<>();
+        if (load) {
+            cartItemPOList = cartItemDao.findByCartId(cartPO.getId());
         }
 
-        List<CartItemPO> cartItemPOList = cartItemDao.findByCartId(cartPO.getId());
-
         return cartFactory.toCart(cartPO, cartItemPOList);
+    }
+
+    @Override
+    public CartItem findCartItemByProductId(long productId) {
+        return cartFactory.toCartItem(cartItemDao.findByProductId(productId));
     }
 
     @Override

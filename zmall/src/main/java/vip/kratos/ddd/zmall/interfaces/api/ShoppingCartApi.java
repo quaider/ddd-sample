@@ -1,14 +1,9 @@
 package vip.kratos.ddd.zmall.interfaces.api;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import vip.kratos.ddd.zmall.application.dto.CartItemDto;
+import org.springframework.web.bind.annotation.*;
+import vip.kratos.ddd.zmall.application.dto.CartDto;
 import vip.kratos.ddd.zmall.application.service.CartApplicationService;
-import vip.kratos.ddd.zmall.application.vm.CartItemViewModel;
-
-import java.util.List;
+import vip.kratos.ddd.zmall.application.vm.CartItemModel;
 
 @RestController
 @RequestMapping("/cart")
@@ -21,12 +16,12 @@ public class ShoppingCartApi {
     }
 
     @PostMapping("/add")
-    public void add(Long userId, CartItemDto itemDto) {
-        cartService.addCartItem(userId, itemDto);
+    public void add(Long userId, CartItemModel itemModel) {
+        cartService.addCartItem(userId, itemModel);
     }
 
-    @GetMapping("/list")
-    public List<CartItemViewModel> list() {
-        return null;
+    @GetMapping("/list/{userId}")
+    public CartDto list(@PathVariable Long userId) {
+        return cartService.findCart(userId);
     }
 }

@@ -2,13 +2,13 @@ package vip.kratos.ddd.zmall.domain.cart.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import vip.kratos.ddd.zmall.domain.common.AggregateRoot;
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
-import vip.kratos.ddd.zmall.domain.common.AggregateRoot;
+import java.util.function.Supplier;
 
 @Getter
 public class Cart extends AggregateRoot {
@@ -23,27 +23,19 @@ public class Cart extends AggregateRoot {
 
     public Cart(long userId, Set<CartItem> cartItems) {
         this.userId = userId;
-        Objects.requireNonNull(cartItems);
-        this.cartItems = cartItems;
+        this.cartItems = cartItems == null ? new HashSet<>() : cartItems;
     }
 
-    public void addCartItem(CartItem item) {
+    public void addCartItem(CartItem item, Supplier<CartItem> oldCartItemSupplier) {
         Objects.requireNonNull(item);
-        CartItem oldItem = findExistCartItem(item.getProduct().getProductId());
+        CartItem oldItem = oldCartItemSupplier.get();
 
         if (oldItem != null) {
-            addSameProduct(item);
+            addSameProduct(item, oldItem);
         } else
             cartItems.add(item);
 
         makeChange();
-    }
-
-    private CartItem findExistCartItem(long productId) {
-        return cartItems.stream()
-                .filter(f -> f.getProduct().getProductId().equals(productId))
-                .findFirst()
-                .orElse(null);
     }
 
     private void makeChange() {
@@ -53,11 +45,8 @@ public class Cart extends AggregateRoot {
     /**
      * 购物车添加相同的商品时，增加商品数量
      */
-    private void addSameProduct(CartItem newItem) {
+    private void addSameProduct(CartItem newItem, CartItem oldItem) {
         Objects.requireNonNull(newItem);
-
-        CartItem oldItem = findExistCartItem(newItem.getProduct().getProductId());
-
         if (oldItem == null) return;
         if (oldItem.getId() != null) newItem.setId(oldItem.getId());
 

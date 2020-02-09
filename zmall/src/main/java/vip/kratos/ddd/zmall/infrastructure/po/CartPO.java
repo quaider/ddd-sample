@@ -18,7 +18,7 @@ import java.util.Date;
 public class CartPO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     private Long userId;
