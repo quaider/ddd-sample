@@ -1,5 +1,6 @@
 package vip.kratos.ddd.zmall.infrastructure.factory;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.stereotype.Component;
 import vip.kratos.ddd.zmall.domain.cart.entity.Cart;
 import vip.kratos.ddd.zmall.domain.cart.entity.CartItem;
@@ -22,7 +23,10 @@ public class CartFactory {
                 .productId(cartItemPO.getProductId())
                 .build();
 
-        return new CartItem(cartItemPO.getQuantity(), snapshot);
+        CartItem cartItem = new CartItem(cartItemPO.getQuantity(), snapshot);
+        cartItem.setId(cartItemPO.getId());
+
+        return cartItem;
     }
 
     public Cart toCart(CartPO cartPO, List<CartItemPO> cartItemPOList) {
@@ -45,6 +49,7 @@ public class CartFactory {
     public CartItemPO toCartItemPO(long cartId, CartItem cartItem) {
         ProductSnapshot snapshot = cartItem.getProduct();
         return CartItemPO.builder()
+                .id(cartItem.getId())
                 .cartId(cartId)
                 .quantity(cartItem.getQuantity())
                 .productId(snapshot.getProductId())

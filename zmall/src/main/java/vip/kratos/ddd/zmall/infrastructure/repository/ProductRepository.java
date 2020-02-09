@@ -6,8 +6,6 @@ import vip.kratos.ddd.zmall.domain.product.repository.IProductRepository;
 import vip.kratos.ddd.zmall.infrastructure.po.ProductPO;
 import vip.kratos.ddd.zmall.infrastructure.repository.dao.ProductDao;
 
-import java.util.Objects;
-
 @Repository
 public class ProductRepository implements IProductRepository {
 
@@ -20,7 +18,7 @@ public class ProductRepository implements IProductRepository {
     @Override
     public Product findById(long productId) {
         ProductPO productPO = productDao.findById(productId).orElse(null);
-        Objects.requireNonNull(productPO);
+        if (productPO == null) return null;
         return Product.fromProductPO(productPO);
     }
 }

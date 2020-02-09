@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -11,22 +12,23 @@ import java.util.Date;
 
 @Getter
 @Entity(name = "t_cart_item")
+@DynamicUpdate
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class CartItemPO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(nullable = false)
-    private long cartId;
+    private Long cartId;
 
     @Column(nullable = false)
-    private int quantity;
+    private Integer quantity;
 
     @Column(nullable = false)
-    private long productId;
+    private Long productId;
 
     @Column(nullable = false)
     private String name;

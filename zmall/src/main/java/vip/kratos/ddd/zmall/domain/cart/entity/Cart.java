@@ -2,12 +2,13 @@ package vip.kratos.ddd.zmall.domain.cart.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import vip.kratos.ddd.zmall.domain.common.AggregateRoot;
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
+import vip.kratos.ddd.zmall.domain.common.AggregateRoot;
 
 @Getter
 public class Cart extends AggregateRoot {
@@ -28,10 +29,7 @@ public class Cart extends AggregateRoot {
 
     public void addCartItem(CartItem item) {
         Objects.requireNonNull(item);
-        CartItem oldItem = cartItems.stream()
-                .filter(item::equals)
-                .findFirst()
-                .orElse(null);
+        CartItem oldItem = findExistCartItem(item.getProduct().getProductId());
 
         if (oldItem != null) {
             addSameProduct(item);
@@ -39,6 +37,13 @@ public class Cart extends AggregateRoot {
             cartItems.add(item);
 
         makeChange();
+    }
+
+    private CartItem findExistCartItem(long productId) {
+        return cartItems.stream()
+                .filter(f -> f.getProduct().getProductId().equals(productId))
+                .findFirst()
+                .orElse(null);
     }
 
     private void makeChange() {
@@ -51,14 +56,13 @@ public class Cart extends AggregateRoot {
     private void addSameProduct(CartItem newItem) {
         Objects.requireNonNull(newItem);
 
-        CartItem oldItem = cartItems.stream()
-                .filter(newItem::equals)
-                .findFirst()
-                .orElse(null);
+        CartItem oldItem = findExistCartItem(newItem.getProduct().getProductId());
 
         if (oldItem == null) return;
+        if (oldItem.getId() != null) newItem.setId(oldItem.getId());
 
         newItem.increaseQuantity(oldItem.getQuantity());
+        cartItems.remove(oldItem);
         cartItems.add(newItem);
     }
 }

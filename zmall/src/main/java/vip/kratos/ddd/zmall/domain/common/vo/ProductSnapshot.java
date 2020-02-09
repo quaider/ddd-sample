@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 @Getter
 @Builder
 public class ProductSnapshot {
-    private long productId;
+    private Long productId;
     private String name;
     private BigDecimal price;
     private String description;

@@ -1,6 +1,7 @@
 package vip.kratos.ddd.zmall.application.service;
 
 import org.springframework.stereotype.Service;
+import vip.kratos.ddd.zmall.application.common.ApplicationException;
 import vip.kratos.ddd.zmall.application.dto.CartItemDto;
 import vip.kratos.ddd.zmall.domain.cart.entity.Cart;
 import vip.kratos.ddd.zmall.domain.cart.entity.CartItem;
@@ -26,6 +27,10 @@ public class CartApplicationService {
     public void addCartItem(long userId, CartItemDto cartItemDto) {
         Cart cart = cartDomainService.findCart(userId);
         Product product = productDomainService.findProduct(cartItemDto.getProductId());
+        if (product == null) {
+            throw ApplicationException.notFound("对应产品不存在：" + cartItemDto.getProductId());
+        }
+
         ProductSnapshot snapshot = fromProduct(product);
         CartItem cartItem = new CartItem(cartItemDto.getQuantity(), snapshot);
         cartDomainService.addCartItem(cart, cartItem);
