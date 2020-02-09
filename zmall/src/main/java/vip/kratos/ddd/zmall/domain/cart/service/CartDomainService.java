@@ -5,6 +5,8 @@ import vip.kratos.ddd.zmall.domain.cart.entity.Cart;
 import vip.kratos.ddd.zmall.domain.cart.entity.CartItem;
 import vip.kratos.ddd.zmall.domain.cart.repository.ICartRepository;
 
+import java.util.Objects;
+
 @Service
 public class CartDomainService {
 
@@ -34,6 +36,11 @@ public class CartDomainService {
 
     public void addCartItem(Cart cart, CartItem item) {
         cart.addCartItem(item, () -> cartRepository.findCartItemByProductId(item.getProduct().getProductId()));
+        cartRepository.saveCart(cart);
+    }
+
+    public void updateCartItemQuantity(Cart cart, long productId, int quantity) {
+        cart.updateQuantity(quantity, () -> cartRepository.findCartItemByProductId(productId));
         cartRepository.saveCart(cart);
     }
 }

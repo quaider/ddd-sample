@@ -16,8 +16,13 @@ public class ShoppingCartApi {
     }
 
     @PostMapping("/add")
-    public void add(Long userId, CartItemModel itemModel) {
+    public void add(long userId, CartItemModel itemModel) {
         cartService.addCartItem(userId, itemModel);
+    }
+
+    @PostMapping("/update")
+    public void updateQuantity(long userId, CartItemModel itemModel) {
+        cartService.updateQuantity(userId, itemModel);
     }
 
     @GetMapping("/list/{userId}")

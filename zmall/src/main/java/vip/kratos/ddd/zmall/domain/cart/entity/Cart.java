@@ -38,6 +38,14 @@ public class Cart extends AggregateRoot {
         makeChange();
     }
 
+    public void updateQuantity(int quantity, Supplier<CartItem> supplier) {
+        CartItem old = supplier.get();
+        Objects.requireNonNull(old);
+        cartItems.remove(old);
+        old.updateQuantity(quantity);
+        cartItems.add(old);
+    }
+
     private void makeChange() {
         this.lastChangeTime = new Date();
     }
@@ -50,7 +58,7 @@ public class Cart extends AggregateRoot {
         if (oldItem == null) return;
         if (oldItem.getId() != null) newItem.setId(oldItem.getId());
 
-        newItem.increaseQuantity(oldItem.getQuantity());
+        newItem.updateQuantity(oldItem.getQuantity() + newItem.getQuantity());
         cartItems.remove(oldItem);
         cartItems.add(newItem);
     }

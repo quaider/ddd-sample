@@ -40,6 +40,12 @@ public class CartApplicationService {
         cartDomainService.addCartItem(cart, cartItem);
     }
 
+    @Transactional(rollbackOn = Exception.class)
+    public void updateQuantity(long userId, CartItemModel cartItemModel) {
+        Cart cart = cartDomainService.findCart(userId);
+        cartDomainService.updateCartItemQuantity(cart, cartItemModel.getProductId(), cartItemModel.getQuantity());
+    }
+
     public CartDto findCart(long userId) {
         Cart cart = cartDomainService.findCartWithItems(userId);
         return assembler.toCartDto(cart);

@@ -25,12 +25,7 @@ public class CartItem extends Entity {
         this.addTime = new Date();
     }
 
-    public void increaseQuantity(int quantity) {
-        this.quantity += quantity;
-    }
-
-    public void decreaseQuantity(int quantity) {
-        this.quantity -= quantity;
-        if (this.quantity < 1) this.quantity = 1;
+    public void updateQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }
