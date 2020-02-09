@@ -62,4 +62,8 @@ public class Cart extends AggregateRoot {
         cartItems.remove(oldItem);
         cartItems.add(newItem);
     }
+
+    public static Cart createEmptyCart(long userId) {
+        return new Cart(userId);
+    }
 }

@@ -15,21 +15,11 @@ public class CartDomainService {
     }
 
     public Cart findCart(long userId) {
-        Cart cart = cartRepository.findCart(userId, false);
-        if (cart == null)
-            cart = createEmptyCart(userId);
-        return cart;
+        return findCartInternal(userId, false);
     }
 
     public Cart findCartWithItems(long userId) {
-        Cart cart = cartRepository.findCart(userId, true);
-        if (cart == null)
-            cart = createEmptyCart(userId);
-        return cart;
-    }
-
-    public Cart createEmptyCart(long userId) {
-        return new Cart(userId);
+        return findCartInternal(userId, true);
     }
 
     public void addCartItem(Cart cart, CartItem item) {
@@ -40,5 +30,12 @@ public class CartDomainService {
     public void updateCartItemQuantity(Cart cart, long productId, int quantity) {
         cart.updateQuantity(quantity, () -> cartRepository.findCartItemByProductId(productId));
         cartRepository.saveCart(cart);
+    }
+
+    private Cart findCartInternal(long userId, boolean loadCartItems) {
+        Cart cart = cartRepository.findCart(userId, loadCartItems);
+        if (cart == null)
+            cart = Cart.createEmptyCart(userId);
+        return cart;
     }
 }
