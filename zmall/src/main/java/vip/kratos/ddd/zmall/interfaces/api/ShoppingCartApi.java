@@ -5,6 +5,8 @@ import vip.kratos.ddd.zmall.application.dto.CartDto;
 import vip.kratos.ddd.zmall.application.service.CartApplicationService;
 import vip.kratos.ddd.zmall.application.vm.CartItemModel;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/cart")
 public class ShoppingCartApi {
@@ -16,17 +18,17 @@ public class ShoppingCartApi {
     }
 
     @PostMapping("/add")
-    public void add(long userId, CartItemModel itemModel) {
+    public void add(long userId, @Valid CartItemModel itemModel) {
         cartService.addCartItem(userId, itemModel);
     }
 
     @PostMapping("/update")
-    public void updateQuantity(long userId, CartItemModel itemModel) {
+    public void updateQuantity(long userId, @Valid CartItemModel itemModel) {
         cartService.updateQuantity(userId, itemModel);
     }
 
     @GetMapping("/list/{userId}")
-    public CartDto list(@PathVariable Long userId) {
+    public CartDto list(@PathVariable long userId) {
         return cartService.findCart(userId);
     }
 }
