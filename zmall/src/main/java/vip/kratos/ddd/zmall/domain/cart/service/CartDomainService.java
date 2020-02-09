@@ -5,8 +5,6 @@ import vip.kratos.ddd.zmall.domain.cart.entity.Cart;
 import vip.kratos.ddd.zmall.domain.cart.entity.CartItem;
 import vip.kratos.ddd.zmall.domain.cart.repository.ICartRepository;
 
-import java.util.Objects;
-
 @Service
 public class CartDomainService {
 
