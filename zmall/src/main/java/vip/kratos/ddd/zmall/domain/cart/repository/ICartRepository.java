@@ -1,12 +1,10 @@
 package vip.kratos.ddd.zmall.domain.cart.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import vip.kratos.ddd.zmall.domain.cart.entity.Cart;
-import vip.kratos.ddd.zmall.domain.cart.entity.CartItem;
 
-public interface ICartRepository {
-    Cart findCart(long userId, boolean load);
+import java.util.Optional;
 
-    CartItem findCartItemByProductId(long productId);
-
-    void saveCart(Cart cart);
+public interface ICartRepository extends JpaRepository<Cart, Long> {
+    Optional<Cart> findByUserId(long userId);
 }

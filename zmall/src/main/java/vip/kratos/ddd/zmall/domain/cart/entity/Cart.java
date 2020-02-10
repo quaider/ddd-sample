@@ -1,66 +1,37 @@
 package vip.kratos.ddd.zmall.domain.cart.entity;
 
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 import vip.kratos.ddd.zmall.domain.common.AggregateRoot;
+import vip.kratos.ddd.zmall.domain.common.vo.ProductSnapshot;
 
+import javax.persistence.*;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.function.Supplier;
 
+@Entity
+@Table(name = "t_cart")
+@DynamicUpdate
+@NoArgsConstructor
 @Getter
 public class Cart extends AggregateRoot {
-    private long userId;
-    private Set<CartItem> cartItems;
-    @Setter
+
+    @Column(nullable = false)
+    private Long userId;
+
+    @Column(nullable = false)
     private Date lastChangeTime;
 
     public Cart(long userId) {
-        this(userId, new HashSet<>());
-    }
-
-    public Cart(long userId, Set<CartItem> cartItems) {
         this.userId = userId;
-        this.cartItems = cartItems == null ? new HashSet<>() : cartItems;
     }
 
-    public void addCartItem(CartItem item, Supplier<CartItem> oldCartItemSupplier) {
-        Objects.requireNonNull(item);
-        CartItem oldItem = oldCartItemSupplier.get();
-
-        if (oldItem != null) {
-            addSameProduct(item, oldItem);
-        } else
-            cartItems.add(item);
-
-        makeChange();
+    public CartItem createItem(int quantity, ProductSnapshot product) {
+        return new CartItem(this, quantity, product);
     }
 
-    public void updateQuantity(int quantity, Supplier<CartItem> supplier) {
-        CartItem old = supplier.get();
-        Objects.requireNonNull(old);
-        cartItems.remove(old);
-        old.updateQuantity(quantity);
-        cartItems.add(old);
-    }
-
-    private void makeChange() {
+    public void update() {
         this.lastChangeTime = new Date();
-    }
-
-    /**
-     * 购物车添加相同的商品时，增加商品数量
-     */
-    private void addSameProduct(CartItem newItem, CartItem oldItem) {
-        Objects.requireNonNull(newItem);
-        if (oldItem == null) return;
-        if (oldItem.getId() != null) newItem.setId(oldItem.getId());
-
-        newItem.updateQuantity(oldItem.getQuantity() + newItem.getQuantity());
-        cartItems.remove(oldItem);
-        cartItems.add(newItem);
     }
 
     public static Cart createEmptyCart(long userId) {

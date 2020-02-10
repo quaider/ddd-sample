@@ -1,26 +1,34 @@
 package vip.kratos.ddd.zmall.domain.product.entity;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import vip.kratos.ddd.zmall.domain.common.AggregateRoot;
-import vip.kratos.ddd.zmall.infrastructure.po.ProductPO;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 
+@Entity
+@Table(name = "t_product")
+@Builder
+@NoArgsConstructor
 @Getter
 public class Product extends AggregateRoot {
+
+    @Column(nullable = false, length = 100)
     private String name;
+
+    @Column(nullable = false, length = 500)
     private String description;
+
+    @Column(nullable = false)
     private BigDecimal price;
 
     public Product(String name, String description, BigDecimal price) {
         this.name = name;
         this.description = description;
         this.price = price;
-    }
-
-    public static Product fromProductPO(ProductPO po) {
-        Product product = new Product(po.getName(), po.getDescription(), po.getPrice());
-        product.setId(po.getId());
-        return product;
     }
 }
