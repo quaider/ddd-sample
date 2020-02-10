@@ -29,17 +29,7 @@ public class CartApplicationService {
 
     @Transactional(rollbackOn = Exception.class)
     public void addCartItem(long userId, CartItemModel cartItemModel) {
-        Cart cart = cartDomainService.findCart(userId).orElse(null);
-        if (cart == null) {
-            cart = Cart.createEmptyCart(userId);
-        }
 
-        Product product = productDomainService.findProduct(cartItemModel.getProductId()).orElse(null);
-        if (product == null) throw ApplicationException.notFound("产品不存在：" + cartItemModel.getProductId());
-
-        ProductSnapshot snapshot = fromProduct(product);
-        CartItem item = cart.createItem(cartItemModel.getQuantity(), snapshot);
-        cartDomainService.addCartItem(cart, item);
     }
 
     @Transactional(rollbackOn = Exception.class)

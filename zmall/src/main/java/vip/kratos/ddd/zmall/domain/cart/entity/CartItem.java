@@ -5,7 +5,9 @@ import lombok.NoArgsConstructor;
 import vip.kratos.ddd.zmall.domain.common.Entity;
 import vip.kratos.ddd.zmall.domain.common.vo.ProductSnapshot;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.Objects;
 
@@ -25,18 +27,13 @@ public class CartItem extends Entity {
     @Column(nullable = false)
     private Date addTime;
 
-    @JoinColumn(name = "cart_id", foreignKey = @ForeignKey(name = "none"), updatable = false)
-    @ManyToOne(optional = false)
-    private Cart cart;
-
-    public CartItem(Cart cart, int quantity, ProductSnapshot product) {
-        this(cart, null, quantity, product);
+    public CartItem(int quantity, ProductSnapshot product) {
+        this(null, quantity, product);
     }
 
-    public CartItem(Cart cart, Long id, int quantity, ProductSnapshot product) {
+    public CartItem(Long id, int quantity, ProductSnapshot product) {
         Objects.requireNonNull(product);
         this.id = id;
-        this.cart = cart;
         this.quantity = quantity;
         this.product = product;
         this.addTime = new Date();
@@ -44,12 +41,5 @@ public class CartItem extends Entity {
 
     public void updateQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    @PrePersist
-    @PreUpdate
-    protected void makeChange() {
-        if (this.addTime == null)
-            this.addTime = new Date();
     }
 }
