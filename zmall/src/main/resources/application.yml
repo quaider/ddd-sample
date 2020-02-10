@@ -5,7 +5,7 @@ spring:
   application:
     name: zmall
   datasource:
-    url: jdbc:mysql://114.67.101.203:3306/zmall?useSSL=false&serverTimezone=Asia/Shanghai&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/zmall?useSSL=false&serverTimezone=Asia/Shanghai&serverTimezone=UTC
     username: ${db.username}
     password: ${db.password}
   jpa:

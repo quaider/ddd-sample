@@ -1,21 +1,25 @@
 package vip.kratos.ddd.zmall.domain.cart.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 import vip.kratos.ddd.zmall.domain.common.AggregateRoot;
 import vip.kratos.ddd.zmall.domain.common.vo.ProductSnapshot;
 
 import javax.persistence.*;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
-import static com.google.common.base.Verify.verifyNotNull;
 
 @Entity
 @Table(name = "t_cart")
 @DynamicUpdate
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Cart extends AggregateRoot {
 
     @Column(nullable = false)
@@ -25,42 +29,43 @@ public class Cart extends AggregateRoot {
     private Date lastChangeTime;
 
     @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
-    @JoinColumn(name = "cart_id", foreignKey = @ForeignKey(name = "none"))
-    private Set<CartItem> items;
-
-    public Cart(long userId, Set<CartItem> items) {
-        verifyNotNull(items, "CartItem is required");
-        this.userId = userId;
-        this.items = items;
-    }
+    @JoinColumn(name = "cart_id", foreignKey = @ForeignKey(name = "none"), nullable = false, updatable = false)
+    @Builder.Default
+    @Getter
+    private Set<CartItem> items = new HashSet<>();
 
     public long userId() {
         return userId;
     }
 
     public Set<CartItem> items() {
-        return items;
+        return Collections.unmodifiableSet(items);
     }
 
-    /**
-     * 如果对象构建复杂，那么应该使用工厂
-     */
-    public static final class Builder {
-        private final Set<CartItem> cartItems = new HashSet<>();
-        private Long userId;
+    @PrePersist
+    public void changed() {
+        lastChangeTime = new Date();
+    }
 
-        public Builder(long userId) {
-            this.userId = userId;
+    public void addItem(ProductSnapshot snapshot, int quantity) {
+
+        CartItem exist = findExistItem(snapshot.getProductId());
+
+        if (exist == null) {
+            items.add(new CartItem(quantity, snapshot));
+        } else {
+            quantity = exist.getQuantity() + quantity;
+            exist.updateQuantity(quantity);
+            exist.replaceProduct(snapshot);
         }
 
-        public Builder addItem(ProductSnapshot product, int quantity) {
-            verifyNotNull(product, "product is required");
-            cartItems.add(new CartItem(quantity, product));
-            return this;
-        }
+        changed();
+    }
 
-        public Cart build() {
-            return new Cart(userId, cartItems);
-        }
+    public CartItem findExistItem(long productId) {
+        return items.stream()
+                .filter(f -> f.getProduct().getProductId().equals(productId))
+                .findFirst()
+                .orElse(null);
     }
 }

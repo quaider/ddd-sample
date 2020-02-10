@@ -1,5 +1,6 @@
 package vip.kratos.ddd.zmall.application.assembler;
 
+import com.google.common.base.Verify;
 import org.springframework.stereotype.Component;
 import vip.kratos.ddd.zmall.application.dto.CartDto;
 import vip.kratos.ddd.zmall.application.dto.CartItemDto;
@@ -13,18 +14,20 @@ import java.util.stream.Collectors;
 @Component
 public class ShoppingCartAssembler {
 
-//    public CartDto toCartDto(Cart cart) {
-//        Set<CartItemDto> items = cart.getCartItems().stream().map(this::toCartItemDto).collect(Collectors.toSet());
-//        BigDecimal totalAmount = items.stream()
-//                .map(f -> f.getPrice().multiply(BigDecimal.valueOf(f.getQuantity())))
-//                .reduce(BigDecimal::add)
-//                .orElse(BigDecimal.ZERO);
-//
-//        return CartDto.builder()
-//                .items(items)
-//                .totalAmount(totalAmount)
-//                .build();
-//    }
+    public CartDto toCartDto(Cart cart) {
+        Verify.verifyNotNull(cart);
+
+        Set<CartItemDto> items = cart.getItems().stream().map(this::toCartItemDto).collect(Collectors.toSet());
+        BigDecimal totalAmount = items.stream()
+                .map(f -> f.getPrice().multiply(BigDecimal.valueOf(f.getQuantity())))
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.ZERO);
+
+        return CartDto.builder()
+                .items(items)
+                .totalAmount(totalAmount)
+                .build();
+    }
 
     public CartItemDto toCartItemDto(CartItem item) {
         return CartItemDto.builder()

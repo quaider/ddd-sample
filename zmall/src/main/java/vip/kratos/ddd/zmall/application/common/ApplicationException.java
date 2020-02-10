@@ -1,5 +1,7 @@
 package vip.kratos.ddd.zmall.application.common;
 
+import com.google.common.base.Strings;
+
 public class ApplicationException extends RuntimeException {
     private Integer status;
 
@@ -8,9 +10,8 @@ public class ApplicationException extends RuntimeException {
         this.status = status;
     }
 
-    public static ApplicationException notFound(String message) {
-        ApplicationException exception = new ApplicationException(404, message);
-        return exception;
+    public static ApplicationException notFound(String errorMessageTemplate, Object... errorMessageArgs) {
+        return new ApplicationException(404, Strings.lenientFormat(errorMessageTemplate, errorMessageArgs));
     }
 
     public Integer getStatus() {

@@ -2,6 +2,7 @@ package vip.kratos.ddd.zmall.domain.cart.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 import vip.kratos.ddd.zmall.domain.common.Entity;
 import vip.kratos.ddd.zmall.domain.common.vo.ProductSnapshot;
 
@@ -13,6 +14,7 @@ import java.util.Objects;
 
 @javax.persistence.Entity
 @Table(name = "t_cart_item")
+@DynamicUpdate
 @NoArgsConstructor
 @Getter
 public class CartItem extends Entity {
@@ -41,5 +43,9 @@ public class CartItem extends Entity {
 
     public void updateQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public void replaceProduct(ProductSnapshot product) {
+        this.product = product;
     }
 }

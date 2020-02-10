@@ -4,8 +4,9 @@ import org.springframework.stereotype.Service;
 import vip.kratos.ddd.zmall.domain.cart.entity.Cart;
 import vip.kratos.ddd.zmall.domain.cart.entity.CartItem;
 import vip.kratos.ddd.zmall.domain.cart.repository.ICartRepository;
+import vip.kratos.ddd.zmall.domain.common.vo.ProductSnapshot;
 
-import java.util.Optional;
+import java.util.function.Supplier;
 
 @Service
 public class CartDomainService {
@@ -16,11 +17,13 @@ public class CartDomainService {
         this.cartRepository = cartRepository;
     }
 
-    public Optional<Cart> findCart(long userId) {
-        return cartRepository.findByUserId(userId);
-    }
-
-    public void addCartItem(Cart cart, CartItem item) {
-
+    public void updateQuantity(Cart cart, long productId, int quantity, Supplier<ProductSnapshot> factory) {
+        CartItem cartItem = cart.findExistItem(productId);
+        if (cartItem == null) {
+            ProductSnapshot product = factory.get();
+            cart.addItem(product, quantity);
+        } else {
+            cartItem.updateQuantity(quantity);
+        }
     }
 }
