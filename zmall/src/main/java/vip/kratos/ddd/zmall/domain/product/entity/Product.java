@@ -1,21 +1,23 @@
 package vip.kratos.ddd.zmall.domain.product.entity;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import vip.kratos.ddd.zmall.domain.common.AggregateRoot;
+import lombok.*;
+import vip.kratos.ddd.zmall.domain.shared.AggregateRoot;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "t_product")
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
-public class Product extends AggregateRoot {
+public class Product extends AggregateRoot<Product> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter(value = AccessLevel.PRIVATE)
+    private Long productId;
 
     @Column(nullable = false, length = 100)
     private String name;
@@ -30,5 +32,10 @@ public class Product extends AggregateRoot {
         this.name = name;
         this.description = description;
         this.price = price;
+    }
+
+    @Override
+    public Long getIdentity() {
+        return productId;
     }
 }

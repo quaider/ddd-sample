@@ -1,14 +1,13 @@
 package vip.kratos.ddd.zmall.domain.cart.entity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
-import vip.kratos.ddd.zmall.domain.common.Entity;
-import vip.kratos.ddd.zmall.domain.common.vo.ProductSnapshot;
+import vip.kratos.ddd.zmall.domain.shared.BaseEntity;
+import vip.kratos.ddd.zmall.domain.shared.vo.ProductSnapshot;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 
@@ -17,7 +16,12 @@ import java.util.Objects;
 @DynamicUpdate
 @NoArgsConstructor
 @Getter
-public class CartItem extends Entity {
+public class CartItem extends BaseEntity<CartItem> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter(value = AccessLevel.PRIVATE)
+    private Long id;
 
     @Column(nullable = false)
     private Integer quantity;
@@ -47,5 +51,10 @@ public class CartItem extends Entity {
 
     public void replaceProduct(ProductSnapshot product) {
         this.product = product;
+    }
+
+    @Override
+    public Long getIdentity() {
+        return id;
     }
 }

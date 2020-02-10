@@ -2,7 +2,7 @@ package vip.kratos.ddd.zmall.domain.order.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import vip.kratos.ddd.zmall.domain.common.AggregateRoot;
+import vip.kratos.ddd.zmall.domain.shared.AggregateRoot;
 import vip.kratos.ddd.zmall.domain.order.entity.vo.Address;
 import vip.kratos.ddd.zmall.domain.order.entity.vo.OrderStatus;
 
@@ -17,7 +17,7 @@ import java.util.Set;
  */
 @Getter
 @Setter
-public class Order extends AggregateRoot {
+public class Order extends AggregateRoot<Order> {
     // 订单号
     private String orderSn;
     private long userId;
@@ -58,5 +58,10 @@ public class Order extends AggregateRoot {
                 .map(f -> f.getProduct().getPrice().multiply(BigDecimal.valueOf(f.getQuantity())))
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO);
+    }
+
+    @Override
+    public Long getIdentity() {
+        return null;
     }
 }

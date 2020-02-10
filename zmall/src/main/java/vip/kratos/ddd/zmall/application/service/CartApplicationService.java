@@ -8,7 +8,7 @@ import vip.kratos.ddd.zmall.application.vm.CartItemModel;
 import vip.kratos.ddd.zmall.domain.cart.entity.Cart;
 import vip.kratos.ddd.zmall.domain.cart.repository.ICartRepository;
 import vip.kratos.ddd.zmall.domain.cart.service.CartDomainService;
-import vip.kratos.ddd.zmall.domain.common.vo.ProductSnapshot;
+import vip.kratos.ddd.zmall.domain.shared.vo.ProductSnapshot;
 import vip.kratos.ddd.zmall.domain.product.entity.Product;
 import vip.kratos.ddd.zmall.domain.product.repository.IProductRepository;
 
@@ -70,7 +70,7 @@ public class CartApplicationService {
     private ProductSnapshot fromProduct(Product product) {
         return ProductSnapshot.builder()
                 .name(product.getName())
-                .productId(product.getId())
+                .productId(product.getIdentity())
                 .price(product.getPrice())
                 .description(product.getDescription())
                 .build();

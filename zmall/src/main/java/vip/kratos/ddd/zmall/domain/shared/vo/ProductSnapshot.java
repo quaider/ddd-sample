@@ -1,4 +1,4 @@
-package vip.kratos.ddd.zmall.domain.common.vo;
+package vip.kratos.ddd.zmall.domain.shared.vo;
 
 import lombok.Builder;
 import lombok.Getter;

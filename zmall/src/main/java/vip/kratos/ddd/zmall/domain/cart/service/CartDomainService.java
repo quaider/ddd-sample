@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import vip.kratos.ddd.zmall.domain.cart.entity.Cart;
 import vip.kratos.ddd.zmall.domain.cart.entity.CartItem;
 import vip.kratos.ddd.zmall.domain.cart.repository.ICartRepository;
-import vip.kratos.ddd.zmall.domain.common.vo.ProductSnapshot;
+import vip.kratos.ddd.zmall.domain.shared.vo.ProductSnapshot;
 
 import java.util.function.Supplier;
 

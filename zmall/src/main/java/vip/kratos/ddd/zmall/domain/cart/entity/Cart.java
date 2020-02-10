@@ -1,12 +1,9 @@
 package vip.kratos.ddd.zmall.domain.cart.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
-import vip.kratos.ddd.zmall.domain.common.AggregateRoot;
-import vip.kratos.ddd.zmall.domain.common.vo.ProductSnapshot;
+import vip.kratos.ddd.zmall.domain.shared.AggregateRoot;
+import vip.kratos.ddd.zmall.domain.shared.vo.ProductSnapshot;
 
 import javax.persistence.*;
 import java.util.Collections;
@@ -20,7 +17,12 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Cart extends AggregateRoot {
+public class Cart extends AggregateRoot<Cart> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter(value = AccessLevel.PRIVATE)
+    private Long cartId;
 
     @Column(nullable = false)
     private Long userId;
@@ -67,5 +69,10 @@ public class Cart extends AggregateRoot {
                 .filter(f -> f.getProduct().getProductId().equals(productId))
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public Long getIdentity() {
+        return cartId;
     }
 }
