@@ -61,7 +61,7 @@ public class CartApplicationService {
         return () -> {
             Product product = productRepository.findById(productId).orElse(null);
             if (product == null) {
-                throw ApplicationException.notFound("产品不存在");
+                throw ApplicationException.notFound("产品不存在：", productId);
             }
             return fromProduct(product);
         };
