@@ -53,7 +53,6 @@ public class Cart extends AggregateRoot<Cart> {
     }
 
     public void addItem(ProductSnapshot snapshot, int quantity) {
-
         CartItem exist = findExistItem(snapshot.getProductId());
 
         if (exist == null) {
@@ -67,6 +66,14 @@ public class Cart extends AggregateRoot<Cart> {
         changed();
     }
 
+    public void removeItem(long productId) {
+        CartItem item = findExistItem(productId);
+        if (item == null) return;
+
+        items.remove(item);
+        changed();
+    }
+
     public CartItem findExistItem(long productId) {
         return items.stream()
                 .filter(f -> f.getProduct().getProductId().equals(productId))
@@ -75,7 +82,7 @@ public class Cart extends AggregateRoot<Cart> {
     }
 
     @Override
-    public Long getIdentity() {
+    public Long identity() {
         return cartId;
     }
 }

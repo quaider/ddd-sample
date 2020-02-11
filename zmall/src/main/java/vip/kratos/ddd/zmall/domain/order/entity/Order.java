@@ -64,7 +64,7 @@ public class Order extends AggregateRoot<Order> {
     }
 
     @Override
-    public Long getIdentity() {
+    public Long identity() {
         return orderId;
     }
 }

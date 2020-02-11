@@ -2,10 +2,10 @@ package vip.kratos.ddd.zmall.domain.shared;
 
 public interface IEntity<TKey, TElement extends IEntity<TKey, TElement>> {
 
-    TKey getIdentity();
+    TKey identity();
 
     default boolean sameIdentityAs(TElement other) {
-        return other != null && getIdentity().equals(other.getIdentity());
+        return other != null && identity().equals(other.identity());
     }
 }
 

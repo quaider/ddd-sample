@@ -41,6 +41,13 @@ public class CartApplicationService {
     }
 
     @Transactional(rollbackOn = Exception.class)
+    public void removeCartItem(long userId, long productId) {
+        Cart cart = findOrCreateIfEmpty(userId);
+        cart.removeItem(productId);
+        cartRepository.save(cart);
+    }
+
+    @Transactional(rollbackOn = Exception.class)
     public void updateQuantity(long userId, CartItemModel cartItemModel) {
         Cart cart = findOrCreateIfEmpty(userId);
         cartDomainService.updateQuantity(cart, cartItemModel.getProductId(), cartItemModel.getQuantity(),
@@ -70,7 +77,7 @@ public class CartApplicationService {
     private ProductSnapshot fromProduct(Product product) {
         return ProductSnapshot.builder()
                 .name(product.getName())
-                .productId(product.getIdentity())
+                .productId(product.identity())
                 .price(product.getPrice())
                 .description(product.getDescription())
                 .build();

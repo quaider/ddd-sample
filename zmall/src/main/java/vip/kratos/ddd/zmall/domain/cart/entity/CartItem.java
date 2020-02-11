@@ -1,6 +1,5 @@
 package vip.kratos.ddd.zmall.domain.cart.entity;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
@@ -53,7 +52,7 @@ public class CartItem extends BaseEntity<CartItem> {
     }
 
     @Override
-    public Long getIdentity() {
+    public Long identity() {
         return id;
     }
 }

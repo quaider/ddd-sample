@@ -22,6 +22,11 @@ public class ShoppingCartApi {
         cartService.addCartItem(userId, itemModel);
     }
 
+    @PostMapping("/del")
+    public void del(long userId, long productId) {
+        cartService.removeCartItem(userId, productId);
+    }
+
     @PostMapping("/update")
     public void updateQuantity(long userId, @Valid CartItemModel itemModel) {
         cartService.updateQuantity(userId, itemModel);

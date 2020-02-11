@@ -10,11 +10,11 @@ public abstract class BaseEntity<T extends IEntity<Long, T>> implements IEntity<
         if (obj == null || this.getClass() != obj.getClass()) return false;
 
         BaseEntity<?> other = (BaseEntity<?>) obj;
-        return (getIdentity() != null && other.getIdentity() != null) && getIdentity().equals(other.getIdentity());
+        return (identity() != null && other.identity() != null) && identity().equals(other.identity());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getIdentity());
+        return Objects.hashCode(identity());
     }
 }

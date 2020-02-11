@@ -20,7 +20,7 @@ public class OrderLine extends BaseEntity<OrderLine> {
     }
 
     @Override
-    public Long getIdentity() {
+    public Long identity() {
         return id;
     }
 }

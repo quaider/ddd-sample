@@ -28,7 +28,7 @@ public class Product extends AggregateRoot<Product> {
     private BigDecimal price;
 
     @Override
-    public Long getIdentity() {
+    public Long identity() {
         return productId;
     }
 }
