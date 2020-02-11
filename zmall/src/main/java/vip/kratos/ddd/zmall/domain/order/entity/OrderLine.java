@@ -9,7 +9,7 @@ import vip.kratos.ddd.zmall.domain.shared.vo.ProductSnapshot;
 @Setter
 public class OrderLine extends BaseEntity<OrderLine> {
 
-    private Long id;
+    protected Long id;
 
     private int quantity;
     private ProductSnapshot product;
@@ -21,6 +21,6 @@ public class OrderLine extends BaseEntity<OrderLine> {
 
     @Override
     public Long getIdentity() {
-        return null;
+        return id;
     }
 }

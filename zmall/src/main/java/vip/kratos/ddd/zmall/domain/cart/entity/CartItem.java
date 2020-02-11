@@ -20,8 +20,7 @@ public class CartItem extends BaseEntity<CartItem> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter(value = AccessLevel.PRIVATE)
-    private Long id;
+    protected Long id;
 
     @Column(nullable = false)
     private Integer quantity;

@@ -2,9 +2,6 @@ package vip.kratos.ddd.zmall.domain.shared;
 
 import com.google.common.base.Objects;
 
-import javax.persistence.MappedSuperclass;
-
-@MappedSuperclass
 public abstract class BaseEntity<T extends IEntity<Long, T>> implements IEntity<Long, T> {
 
     @Override

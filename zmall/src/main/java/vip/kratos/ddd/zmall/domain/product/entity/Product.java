@@ -16,8 +16,7 @@ public class Product extends AggregateRoot<Product> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter(value = AccessLevel.PRIVATE)
-    private Long productId;
+    protected Long productId;
 
     @Column(nullable = false, length = 100)
     private String name;
@@ -27,12 +26,6 @@ public class Product extends AggregateRoot<Product> {
 
     @Column(nullable = false)
     private BigDecimal price;
-
-    public Product(String name, String description, BigDecimal price) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-    }
 
     @Override
     public Long getIdentity() {

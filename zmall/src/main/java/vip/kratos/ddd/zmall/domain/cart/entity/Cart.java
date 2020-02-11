@@ -21,8 +21,7 @@ public class Cart extends AggregateRoot<Cart> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter(value = AccessLevel.PRIVATE)
-    private Long cartId;
+    protected Long cartId;
 
     @Column(nullable = false)
     private Long userId;
@@ -42,6 +41,10 @@ public class Cart extends AggregateRoot<Cart> {
 
     public Set<CartItem> items() {
         return Collections.unmodifiableSet(items);
+    }
+
+    public Cart(long userId) {
+        this.userId = userId;
     }
 
     @PrePersist
