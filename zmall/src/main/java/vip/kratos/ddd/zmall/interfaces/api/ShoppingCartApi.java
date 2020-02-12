@@ -6,6 +6,9 @@ import vip.kratos.ddd.zmall.application.service.CartApplicationService;
 import vip.kratos.ddd.zmall.application.vm.CartItemModel;
 
 import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/cart")
@@ -23,8 +26,12 @@ public class ShoppingCartApi {
     }
 
     @PostMapping("/del")
-    public void del(long userId, long productId) {
-        cartService.removeCartItem(userId, productId);
+    public void del(long userId, String productIds) {
+        Set<Long> ids = Arrays.stream(productIds.split(","))
+                .map(Long::valueOf)
+                .collect(Collectors.toSet());
+
+        cartService.removeCartItem(userId, ids);
     }
 
     @PostMapping("/update")
@@ -35,5 +42,10 @@ public class ShoppingCartApi {
     @GetMapping("/list/{userId}")
     public CartDto list(@PathVariable long userId) {
         return cartService.findCart(userId);
+    }
+
+    @PostMapping("/clear")
+    public void clear(long userId) {
+        cartService.removeAll(userId);
     }
 }
