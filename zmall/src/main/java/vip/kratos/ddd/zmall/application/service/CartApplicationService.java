@@ -13,6 +13,7 @@ import vip.kratos.ddd.zmall.domain.product.entity.Product;
 import vip.kratos.ddd.zmall.domain.product.repository.IProductRepository;
 
 import javax.transaction.Transactional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 @Service
@@ -41,10 +42,20 @@ public class CartApplicationService {
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public void removeCartItem(long userId, long productId) {
+    public void removeCartItem(long userId, Set<Long> productIds) {
         Cart cart = findOrCreateIfEmpty(userId);
-        cart.removeItem(productId);
+        for (long productId: productIds)
+            cart.removeItem(productId);
+
         cartRepository.save(cart);
+    }
+
+    @Transactional
+    public void removeAll(long userId) {
+        Cart cart = cartRepository.findByUserId(userId).orElse(null);
+        if (cart == null) return;
+
+        cartRepository.delete(cart);
     }
 
     @Transactional(rollbackOn = Exception.class)
@@ -68,7 +79,7 @@ public class CartApplicationService {
         return () -> {
             Product product = productRepository.findById(productId).orElse(null);
             if (product == null) {
-                throw ApplicationException.notFound("产品不存在：", productId);
+                throw ApplicationException.notFound("产品[%s]不存在", productId);
             }
             return fromProduct(product);
         };
