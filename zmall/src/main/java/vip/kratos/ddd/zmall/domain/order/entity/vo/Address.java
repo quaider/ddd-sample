@@ -1,9 +1,11 @@
 package vip.kratos.ddd.zmall.domain.order.entity.vo;
 
-import lombok.Data;
+import lombok.Getter;
+import vip.kratos.ddd.zmall.domain.shared.ValueObject;
+import vip.kratos.ddd.zmall.domain.shared.vo.ProductSnapshot;
 
-@Data
-public class Address {
+@Getter
+public class Address extends ValueObject<ProductSnapshot> {
     private String country;
     private String province;
     private String city;
