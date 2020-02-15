@@ -2,18 +2,24 @@ package vip.kratos.ddd.zmall.domain.order.entity;
 
 import com.google.common.base.Verify;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import vip.kratos.ddd.zmall.domain.order.entity.vo.Address;
 import vip.kratos.ddd.zmall.domain.order.entity.vo.OrderStatus;
 import vip.kratos.ddd.zmall.domain.shared.AggregateRoot;
 import vip.kratos.ddd.zmall.domain.shared.vo.ProductSnapshot;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.*;
 
 /**
  * 订单聚合根
  */
+@Entity
+@Table(name = "t_order")
 @Getter
+@NoArgsConstructor
 public class Order extends AggregateRoot<Order> {
 
     protected Long orderId;
@@ -33,24 +39,23 @@ public class Order extends AggregateRoot<Order> {
 
     private Set<OrderLine> lines;
 
-    public Order(long userId) {
-        this(userId, new HashSet<>());
-    }
-
     public Order(long userId, Set<OrderLine> lines) {
         Objects.requireNonNull(lines);
         this.userId = userId;
         this.lines = Collections.unmodifiableSet(lines);
-        this.totalAmount = calTotalAmount();
+        reCalAmount();
     }
 
     /**
      * 新建订单
      */
-    public void create() {
+    public void create(String orderSn, Address address, BigDecimal couponAmount) {
+        this.orderSn = orderSn;
         // 待支付
         this.status = OrderStatus.CREATED;
-        orderDate = new Date();
+        this.orderDate = new Date();
+        this.couponAmount = couponAmount;
+        this.receiverAddress = address;
     }
 
     /**
@@ -68,10 +73,10 @@ public class Order extends AggregateRoot<Order> {
     }
 
     /**
-     * 计算订单总金额
+     * 计算订单金额
      */
-    private BigDecimal calTotalAmount() {
-        return lines.stream()
+    private void reCalAmount() {
+        this.totalAmount = lines.stream()
                 .map(f -> f.getProduct().getPrice().multiply(BigDecimal.valueOf(f.getQuantity())))
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO);
@@ -80,33 +85,5 @@ public class Order extends AggregateRoot<Order> {
     @Override
     public Long identity() {
         return orderId;
-    }
-
-    public static class Builder {
-        private Long userId;
-        private String orderSn;
-        private Set<OrderLine> lines;
-
-        private Builder(long userId) {
-            this.userId = userId;
-            this.lines = new HashSet<>();
-        }
-
-        private Builder orderSn(String orderSn) {
-            this.orderSn = orderSn;
-            return this;
-        }
-
-        public void addLine(int quantity, ProductSnapshot product) {
-            Verify.verifyNotNull(product);
-            OrderLine line = new OrderLine(quantity, product);
-            lines.add(line);
-        }
-
-        public Order build() {
-            Order order = new Order(userId, lines);
-            order.orderSn = this.orderSn;
-            return order;
-        }
     }
 }
