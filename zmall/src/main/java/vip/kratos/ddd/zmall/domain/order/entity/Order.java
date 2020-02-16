@@ -1,22 +1,25 @@
 package vip.kratos.ddd.zmall.domain.order.entity;
 
+import com.google.common.base.Verify;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import vip.kratos.ddd.zmall.domain.order.entity.vo.Address;
 import vip.kratos.ddd.zmall.domain.order.entity.vo.OrderStatus;
 import vip.kratos.ddd.zmall.domain.shared.AggregateRoot;
+import vip.kratos.ddd.zmall.domain.shared.vo.ProductSnapshot;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 订单聚合根
  */
+@Entity
+@Table(name = "t_order")
 @Getter
-@Setter
+@NoArgsConstructor
 public class Order extends AggregateRoot<Order> {
 
     protected Long orderId;
@@ -36,28 +39,44 @@ public class Order extends AggregateRoot<Order> {
 
     private Set<OrderLine> lines;
 
-    public Order(long userId) {
-        this(userId, new HashSet<>());
-    }
-
     public Order(long userId, Set<OrderLine> lines) {
         Objects.requireNonNull(lines);
         this.userId = userId;
-        this.lines = new HashSet<>();
-    }
-
-    public void create() {
-        this.totalAmount = calTotalAmount();
-        this.payAmount = this.totalAmount.multiply(this.couponAmount);
-        if (this.payAmount.compareTo(BigDecimal.ZERO) < 0) this.payAmount = BigDecimal.ZERO;
-        status = OrderStatus.INIT;
+        this.lines = Collections.unmodifiableSet(lines);
+        reCalAmount();
     }
 
     /**
-     * 计算订单总金额
+     * 新建订单
      */
-    private BigDecimal calTotalAmount() {
-        return lines.stream()
+    public void create(String orderSn, Address address, BigDecimal couponAmount) {
+        this.orderSn = orderSn;
+        // 待支付
+        this.status = OrderStatus.CREATED;
+        this.orderDate = new Date();
+        this.couponAmount = couponAmount;
+        this.receiverAddress = address;
+    }
+
+    /**
+     * 支付订单
+     *
+     * @param totalCoupon 优惠金额
+     */
+    public void pay(BigDecimal totalCoupon) {
+        BigDecimal shouldPay = totalAmount.subtract(totalCoupon);
+        Verify.verify(shouldPay.compareTo(BigDecimal.ZERO) >= 0, "支付金额不能为非负数");
+        this.payAmount = shouldPay;
+        this.couponAmount = totalCoupon;
+        // 已支付待发货
+        this.status = OrderStatus.PAID;
+    }
+
+    /**
+     * 计算订单金额
+     */
+    private void reCalAmount() {
+        this.totalAmount = lines.stream()
                 .map(f -> f.getProduct().getPrice().multiply(BigDecimal.valueOf(f.getQuantity())))
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO);
