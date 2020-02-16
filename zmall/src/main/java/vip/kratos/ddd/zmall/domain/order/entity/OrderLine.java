@@ -19,6 +19,8 @@ public class OrderLine extends BaseEntity<OrderLine> {
         this.product = product;
     }
 
+    
+
     @Override
     public Long identity() {
         return id;
