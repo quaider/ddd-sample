@@ -10,6 +10,22 @@
 
 2、由于每次操作都通过聚合根进行，因此都需要重建Cart聚合根，这会导致每次查询CartPO、CartItemPO列表
 
+## 好文收集
+
+### 领域事件相关
+
+- [在微服务中使用领域事件1](https://www.cnblogs.com/davenkin/p/6612656.html)
+
+    介绍了领域事件发布的几种实现方案和可落地的建议
+
+- [在微服务中使用领域事件2](https://insights.thoughtworks.cn/use-domain-events-in-microservices/)
+
+    介绍了如何创建领域事件、发布领域事件、事件的流转及业务操作和事件发布的原子性方案
+
+- [后端开发实践系列——事件驱动架构(EDA)编码实践](https://www.jianshu.com/p/b9549a4373b2)
+    
+    描述了领域事件在DDD中如何发布、存储、事件与业务操作的原子性等实现方案
+
 ## 设计观点收集
 
 > DDD中其实并没有PO或者BO的概念，相反引入这些对象会增加编码复杂度

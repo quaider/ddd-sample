@@ -6,7 +6,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class CartItemModel {
+public class CreateCartItemCommand {
     @Min(value = 1, message = "数量必须大于0")
     private Integer quantity;
     @NotNull(message = "产品不能为空")

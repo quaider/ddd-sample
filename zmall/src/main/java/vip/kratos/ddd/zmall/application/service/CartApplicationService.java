@@ -4,13 +4,13 @@ import org.springframework.stereotype.Service;
 import vip.kratos.ddd.zmall.application.assembler.ShoppingCartAssembler;
 import vip.kratos.ddd.zmall.application.common.ApplicationException;
 import vip.kratos.ddd.zmall.application.dto.CartDto;
-import vip.kratos.ddd.zmall.application.vm.CartItemModel;
+import vip.kratos.ddd.zmall.application.vm.CreateCartItemCommand;
 import vip.kratos.ddd.zmall.domain.cart.entity.Cart;
 import vip.kratos.ddd.zmall.domain.cart.repository.ICartRepository;
 import vip.kratos.ddd.zmall.domain.cart.service.CartDomainService;
-import vip.kratos.ddd.zmall.domain.shared.vo.ProductSnapshot;
 import vip.kratos.ddd.zmall.domain.product.entity.Product;
 import vip.kratos.ddd.zmall.domain.product.repository.IProductRepository;
+import vip.kratos.ddd.zmall.domain.shared.vo.ProductSnapshot;
 
 import javax.transaction.Transactional;
 import java.util.Set;
@@ -33,7 +33,7 @@ public class CartApplicationService {
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public void addCartItem(long userId, CartItemModel cartItemModel) {
+    public void addCartItem(long userId, CreateCartItemCommand cartItemModel) {
         ProductSnapshot product = buildProductFactory(cartItemModel.getProductId()).get();
         Cart cart = findOrCreateIfEmpty(userId);
         cart.addItem(product, cartItemModel.getQuantity());
@@ -59,7 +59,7 @@ public class CartApplicationService {
     }
 
     @Transactional(rollbackOn = Exception.class)
-    public void updateQuantity(long userId, CartItemModel cartItemModel) {
+    public void updateQuantity(long userId, CreateCartItemCommand cartItemModel) {
         Cart cart = findOrCreateIfEmpty(userId);
         cartDomainService.updateQuantity(cart, cartItemModel.getProductId(), cartItemModel.getQuantity(),
                 buildProductFactory(cartItemModel.getProductId()));
@@ -81,17 +81,8 @@ public class CartApplicationService {
             if (product == null) {
                 throw ApplicationException.notFound("产品[%s]不存在", productId);
             }
-            return fromProduct(product);
+            return ProductSnapshot.fromProduct(product);
         };
-    }
-
-    private ProductSnapshot fromProduct(Product product) {
-        return ProductSnapshot.builder()
-                .name(product.getName())
-                .productId(product.identity())
-                .price(product.getPrice())
-                .description(product.getDescription())
-                .build();
     }
 
 }

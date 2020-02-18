@@ -14,6 +14,10 @@ public class ApplicationException extends RuntimeException {
         return new ApplicationException(404, Strings.lenientFormat(errorMessageTemplate, errorMessageArgs));
     }
 
+    public static ApplicationException verify(String errorMessageTemplate, Object... errorMessageArgs) {
+        return new ApplicationException(401, Strings.lenientFormat(errorMessageTemplate, errorMessageArgs));
+    }
+
     public Integer getStatus() {
         return status;
     }

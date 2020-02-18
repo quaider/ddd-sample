@@ -12,7 +12,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "t_cart")
+@Table(name = "t_cart",
+        indexes = {@Index(name = "idx_userId", columnList = "userId")})
 @DynamicUpdate
 @NoArgsConstructor
 @AllArgsConstructor

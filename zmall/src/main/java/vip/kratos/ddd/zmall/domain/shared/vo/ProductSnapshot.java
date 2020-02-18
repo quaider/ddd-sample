@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import vip.kratos.ddd.zmall.domain.product.entity.Product;
 import vip.kratos.ddd.zmall.domain.shared.ValueObject;
 
 import javax.persistence.Column;
@@ -27,4 +28,13 @@ public class ProductSnapshot extends ValueObject<ProductSnapshot> {
 
     @Column(name = "product_description", length = 500)
     private String description;
+
+    public static ProductSnapshot fromProduct(Product product) {
+        return ProductSnapshot.builder()
+                .name(product.getName())
+                .productId(product.identity())
+                .price(product.getPrice())
+                .description(product.getDescription())
+                .build();
+    }
 }

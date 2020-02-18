@@ -3,7 +3,7 @@ package vip.kratos.ddd.zmall.interfaces.api;
 import org.springframework.web.bind.annotation.*;
 import vip.kratos.ddd.zmall.application.dto.CartDto;
 import vip.kratos.ddd.zmall.application.service.CartApplicationService;
-import vip.kratos.ddd.zmall.application.vm.CartItemModel;
+import vip.kratos.ddd.zmall.application.vm.CreateCartItemCommand;
 
 import javax.validation.Valid;
 import java.util.Arrays;
@@ -21,8 +21,8 @@ public class ShoppingCartApi {
     }
 
     @PostMapping("/add")
-    public void add(long userId, @Valid CartItemModel itemModel) {
-        cartService.addCartItem(userId, itemModel);
+    public void add(long userId, @Valid CreateCartItemCommand command) {
+        cartService.addCartItem(userId, command);
     }
 
     @PostMapping("/del")
@@ -35,8 +35,8 @@ public class ShoppingCartApi {
     }
 
     @PostMapping("/update")
-    public void updateQuantity(long userId, @Valid CartItemModel itemModel) {
-        cartService.updateQuantity(userId, itemModel);
+    public void updateQuantity(long userId, @Valid CreateCartItemCommand command) {
+        cartService.updateQuantity(userId, command);
     }
 
     @GetMapping("/list/{userId}")

@@ -10,5 +10,6 @@ public class OrderVM {
     private String orderSn;
     private Long userId;
     private BigDecimal totalAmount;
+    private BigDecimal payAmount;
     private String orderStatus;
 }
