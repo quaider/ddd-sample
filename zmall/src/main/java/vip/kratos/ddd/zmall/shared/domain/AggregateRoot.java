@@ -1,4 +1,4 @@
-package vip.kratos.ddd.zmall.domain.shared;
+package vip.kratos.ddd.zmall.shared.domain;
 
 import java.util.List;
 
@@ -12,11 +12,11 @@ public abstract class AggregateRoot<T extends BaseEntity<T>> extends BaseEntity<
         get_events().add(event);
     }
 
-    final void clearEvents() {
+    public final void clearEvents() {
         get_events().clear();
     }
 
-    final List<IDomainEvent> get_events() {
+    public final List<IDomainEvent> get_events() {
         if (_events == null) {
             _events = newArrayList();
         }

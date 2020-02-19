@@ -1,6 +1,6 @@
 package vip.kratos.ddd.zmall.domain.order.entity.vo;
 
-import vip.kratos.ddd.zmall.domain.shared.IValueObject;
+import vip.kratos.ddd.zmall.shared.domain.IValueObject;
 
 public enum OrderStatus implements IValueObject<OrderStatus> {
 

@@ -3,13 +3,11 @@ package vip.kratos.ddd.zmall.domain.order.entity;
 import com.google.common.base.Verify;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.AfterDomainEventPublication;
-import org.springframework.data.domain.DomainEvents;
 import vip.kratos.ddd.zmall.domain.order.entity.vo.Address;
 import vip.kratos.ddd.zmall.domain.order.entity.vo.OrderStatus;
 import vip.kratos.ddd.zmall.domain.order.event.OrderCreatedEvent;
-import vip.kratos.ddd.zmall.domain.shared.AggregateRoot;
-import vip.kratos.ddd.zmall.domain.shared.DomainEvent;
+import vip.kratos.ddd.zmall.shared.domain.AggregateRoot;
+import vip.kratos.ddd.zmall.shared.domain.DomainEvent;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

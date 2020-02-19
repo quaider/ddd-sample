@@ -1,42 +1,45 @@
-package vip.kratos.ddd.zmall.infrastructure.repository.jpa.event.jackson;
+package vip.kratos.ddd.zmall.shared.jackson;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.impl.ObjectIdWriter;
 import com.fasterxml.jackson.databind.ser.std.BeanSerializerBase;
-import vip.kratos.ddd.zmall.domain.shared.DomainEvent;
 
 import java.io.IOException;
 import java.util.Set;
 
-public class DomainEventJacksonSerializer extends BeanSerializerBase {
+public class GenericJacksonSerializer<T> extends BeanSerializerBase {
 
-    public DomainEventJacksonSerializer(BeanSerializerBase source) {
+    private Class<T> clazz;
+
+    public GenericJacksonSerializer(Class<T> clazz, BeanSerializerBase source) {
         super(source);
+        this.clazz = clazz;
     }
 
-    private DomainEventJacksonSerializer(DomainEventJacksonSerializer source,
-                                         ObjectIdWriter objectIdWriter) {
+    private GenericJacksonSerializer(Class<T> clazz, GenericJacksonSerializer source, ObjectIdWriter objectIdWriter) {
         super(source, objectIdWriter);
+        this.clazz = clazz;
     }
 
-    private DomainEventJacksonSerializer(DomainEventJacksonSerializer source,
-                                         Set<String> toIgnore) {
+    private GenericJacksonSerializer(Class<T> clazz, GenericJacksonSerializer source, Set<String> toIgnore) {
         super(source, toIgnore);
+        this.clazz = clazz;
     }
 
-    private DomainEventJacksonSerializer(DomainEventJacksonSerializer domainEventSerializer, ObjectIdWriter objectIdWriter, Object filterId) {
+    private GenericJacksonSerializer(Class<T> clazz, GenericJacksonSerializer domainEventSerializer, ObjectIdWriter objectIdWriter, Object filterId) {
         super(domainEventSerializer, objectIdWriter, filterId);
+        this.clazz = clazz;
     }
 
     @Override
     public BeanSerializerBase withObjectIdWriter(ObjectIdWriter objectIdWriter) {
-        return new DomainEventJacksonSerializer(this, objectIdWriter);
+        return new GenericJacksonSerializer<>(clazz, this, objectIdWriter);
     }
 
     @Override
     protected BeanSerializerBase withIgnorals(Set<String> toIgnore) {
-        return new DomainEventJacksonSerializer(this, toIgnore);
+        return new GenericJacksonSerializer<>(clazz, this, toIgnore);
     }
 
     @Override
@@ -46,15 +49,15 @@ public class DomainEventJacksonSerializer extends BeanSerializerBase {
 
     @Override
     public BeanSerializerBase withFilterId(Object filterId) {
-        return new DomainEventJacksonSerializer(this, _objectIdWriter, filterId);
+        return new GenericJacksonSerializer<>(clazz, this, _objectIdWriter, filterId);
     }
 
     @Override
     public void serialize(Object bean, JsonGenerator gen, SerializerProvider provider) throws IOException {
         gen.writeStartObject();
         serializeFields(bean, gen, provider);
-        if (bean instanceof DomainEvent) {
-            gen.writeStringField(DomainEventJacksonModule.TYPE, bean.getClass().getName());
+        if (clazz.isInstance(bean)) {
+            gen.writeStringField(GenericJacksonModule.TYPE, bean.getClass().getName());
         }
         gen.writeEndObject();
     }

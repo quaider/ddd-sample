@@ -1,4 +1,4 @@
-package vip.kratos.ddd.zmall.domain.shared;
+package vip.kratos.ddd.zmall.shared.domain;
 
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;

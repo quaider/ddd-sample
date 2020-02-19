@@ -1,4 +1,4 @@
-package vip.kratos.ddd.zmall.infrastructure.repository.jpa.event.jackson;
+package vip.kratos.ddd.zmall.shared.jackson;
 
 import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -6,14 +6,14 @@ import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
 import com.fasterxml.jackson.databind.ser.std.BeanSerializerBase;
-import vip.kratos.ddd.zmall.domain.shared.DomainEvent;
+import vip.kratos.ddd.zmall.shared.domain.IDomainEvent;
 
-public class DomainEventJacksonModule extends SimpleModule {
-    static final String TYPE = "_type";
+public class GenericJacksonModule<T> extends SimpleModule {
+    public static final String TYPE = "_type";
 
-    public DomainEventJacksonModule() {
+    public GenericJacksonModule(Class<?> clazz) {
         super();
-        super.addDeserializer(DomainEvent.class, new DomainEventJacksonDeserializer(DomainEvent.class));
+        super.addDeserializer(clazz, new GenericJacksonDeserializer<>(clazz));
     }
 
     public void setupModule(SetupContext context) {
@@ -26,7 +26,7 @@ public class DomainEventJacksonModule extends SimpleModule {
                     BeanDescription beanDesc,
                     JsonSerializer<?> serializer) {
                 if (serializer instanceof BeanSerializerBase) {
-                    return new DomainEventJacksonSerializer((BeanSerializerBase) serializer);
+                    return new GenericJacksonSerializer<>(IDomainEvent.class, (BeanSerializerBase) serializer);
                 }
                 return serializer;
 

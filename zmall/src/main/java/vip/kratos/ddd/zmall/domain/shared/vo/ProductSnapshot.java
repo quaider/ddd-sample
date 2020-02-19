@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import vip.kratos.ddd.zmall.domain.product.entity.Product;
-import vip.kratos.ddd.zmall.domain.shared.ValueObject;
+import vip.kratos.ddd.zmall.shared.domain.ValueObject;
 
 import javax.persistence.Column;
 import java.math.BigDecimal;

@@ -1,4 +1,4 @@
-package vip.kratos.ddd.zmall.infrastructure.repository.jpa.event.jackson;
+package vip.kratos.ddd.zmall.shared.jackson;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
@@ -9,13 +9,14 @@ import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import vip.kratos.ddd.zmall.shared.domain.IDomainEvent;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.time.Instant;
 
-import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
+import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 import static com.fasterxml.jackson.annotation.PropertyAccessor.ALL;
 import static com.fasterxml.jackson.annotation.PropertyAccessor.FIELD;
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
@@ -34,7 +35,8 @@ public class DefaultObjectMapper extends ObjectMapper {
                 .registerModule(trimStringModule())
                 .configure(WRITE_DATES_AS_TIMESTAMPS, false)
                 .configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
-        registerModule(new DomainEventJacksonModule());
+
+        registerModule(new GenericJacksonModule<>(IDomainEvent.class));
     }
 
     private SimpleModule instantModule() {

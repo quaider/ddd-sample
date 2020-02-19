@@ -1,10 +1,8 @@
 package vip.kratos.ddd.zmall.infrastructure.repository.jpa;
 
-import org.springframework.data.jpa.repository.support.JpaEntityInformationSupport;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
-import org.springframework.transaction.annotation.Transactional;
-import vip.kratos.ddd.zmall.domain.shared.AggregateRoot;
-import vip.kratos.ddd.zmall.infrastructure.repository.jpa.event.DefaultEventRepository;
+import vip.kratos.ddd.zmall.shared.domain.AggregateRoot;
+import vip.kratos.ddd.zmall.shared.domain.IDomainEventRepository;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -12,16 +10,16 @@ import javax.persistence.EntityManager;
 public abstract class BaseRepository<T extends AggregateRoot<T>> extends SimpleJpaRepository<T, Long> {
 
     @Resource
-    private DefaultEventRepository<T> eventRepository;
+    private IDomainEventRepository eventRepository;
 
     public BaseRepository(Class<T> domainClass, EntityManager em) {
-        super(JpaEntityInformationSupport.getEntityInformation(domainClass, em), em);
+        super(domainClass, em);
     }
 
-    @Transactional
     @Override
     public <S extends T> S save(S entity) {
-        eventRepository.store(entity);
+        eventRepository.save(entity.get_events());
+        entity.clearEvents();
         return super.save(entity);
     }
 }

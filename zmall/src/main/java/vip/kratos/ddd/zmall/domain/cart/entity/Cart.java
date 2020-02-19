@@ -1,9 +1,12 @@
 package vip.kratos.ddd.zmall.domain.cart.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
-import vip.kratos.ddd.zmall.domain.shared.AggregateRoot;
 import vip.kratos.ddd.zmall.domain.shared.vo.ProductSnapshot;
+import vip.kratos.ddd.zmall.shared.domain.AggregateRoot;
 
 import javax.persistence.*;
 import java.util.Collections;

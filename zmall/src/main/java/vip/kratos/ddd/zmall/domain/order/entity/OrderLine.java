@@ -3,7 +3,7 @@ package vip.kratos.ddd.zmall.domain.order.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import vip.kratos.ddd.zmall.domain.shared.BaseEntity;
+import vip.kratos.ddd.zmall.shared.domain.BaseEntity;
 import vip.kratos.ddd.zmall.domain.shared.vo.ProductSnapshot;
 
 import javax.persistence.*;

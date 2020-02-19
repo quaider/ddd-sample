@@ -2,7 +2,7 @@ package vip.kratos.ddd.zmall.domain.order.entity.vo;
 
 import lombok.Getter;
 import lombok.Setter;
-import vip.kratos.ddd.zmall.domain.shared.ValueObject;
+import vip.kratos.ddd.zmall.shared.domain.ValueObject;
 
 import javax.persistence.Column;
 
