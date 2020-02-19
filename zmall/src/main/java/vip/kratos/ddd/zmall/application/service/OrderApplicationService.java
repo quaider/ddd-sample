@@ -5,6 +5,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import vip.kratos.ddd.zmall.application.assembler.OrderAssembler;
 import vip.kratos.ddd.zmall.application.common.ApplicationException;
+import vip.kratos.ddd.zmall.application.common.DomainEventAware;
 import vip.kratos.ddd.zmall.application.vm.CreateCartItemCommand;
 import vip.kratos.ddd.zmall.application.vm.CreateOrderCommand;
 import vip.kratos.ddd.zmall.domain.order.entity.Order;
@@ -37,6 +38,7 @@ public class OrderApplicationService {
         this.orderAssembler = orderAssembler;
     }
 
+    @DomainEventAware
     @Transactional(rollbackOn = Exception.class)
     public OrderVM createOrder(long userId, CreateOrderCommand command) {
 
