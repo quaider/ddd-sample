@@ -18,3 +18,5 @@ spring:
       ddl-auto: update
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy # 字段名下划线转驼峰
+    mapping-resources:
+      - jpa-mappings/StoredEvent.jpa.xml
